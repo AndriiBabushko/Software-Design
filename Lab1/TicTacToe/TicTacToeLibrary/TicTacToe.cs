@@ -4,13 +4,27 @@
     {
         protected static Player[] Players = new Player[2];
         protected static string[,] GameField = new string[3, 3];
+        protected static XML PlayersFile = new XML("players.xml");
 
         protected static void InitializatePlayers()
         {
             if (Players[0] is null && Players[1] is null)
             {
-                Players[0] = new Player(1);
-                Players[1] = new Player(2, Players[0].GetRole());
+                Player[] SavedPlayers = PlayersFile.ReadPlayers();
+               
+                if (SavedPlayers[0] is not null && SavedPlayers[1] is not null)
+                {
+                    foreach (Player player in SavedPlayers)
+                        Console.WriteLine($"Number: {player.GetNumber()}; Role: {player.GetRole()}");
+
+                    Players[0] = SavedPlayers[0];
+                    Players[1] = SavedPlayers[1];
+                } 
+                else
+                {
+                    Players[0] = new Player(1);
+                    Players[1] = new Player(2, Players[0].GetRole());
+                }
             }   
         }
 
@@ -108,6 +122,7 @@
                 }
             } while (PlayAgain == "y");
 
+            PlayersFile.WritePlayers(Players);
             StartGame();
         }
 
@@ -162,7 +177,7 @@
                 {
                     do
                     {
-                        Console.Write($"\n\nEnter number: ");
+                        Console.Write($"\nEnter number: ");
                         if (int.TryParse(Console.ReadLine(), out Move) && (Move >= 1 && Move <= 9))
                             break;
                         else
@@ -172,7 +187,7 @@
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.Write("\nEnter valid field: ");
                         }
-                    } while (!int.TryParse(Console.ReadLine(), out Move) && (Move >= 1 && Move <= 9));
+                    } while (!int.TryParse(Console.ReadLine(), out Move) && !(Move >= 1 && Move <= 9));
                 } while (!TickGameField(Move, Players[PlayerNumber - 1].GetRole()));
 
                 switch (PlayerNumber)
@@ -321,12 +336,11 @@
         {
             Console.WriteLine("\tRating");
             
-
             for (int i = 0; i < Players.Length; i++)
             {
                 double WinRate = 0;
                 if (Players[i].GetRating("TotalGames") != 0)
-                    WinRate = Math.Round((Players[i].GetRating("X") + Players[i].GetRating("Y")) / Players[i].GetRating("TotalGames") * 100, 2);
+                    WinRate = Math.Round((Players[i].GetRating("X") + Players[i].GetRating("O")) / Players[i].GetRating("TotalGames") * 100, 2);
 
                 Console.WriteLine($"\n\tPlayer {i + 1}");
                 Console.WriteLine($"X wins: {(int)Players[i].GetRating("X")}");
@@ -335,8 +349,8 @@
                 Console.WriteLine($"Win rate: {WinRate}%");
             }
             
-            Console.Write("\nPress any KEY to go back to menu..."); 
-            Console.ReadKey();
+            Console.Write("\nPress ENTER to go back to menu..."); 
+            Console.ReadLine();
 
             StartGame();
         }

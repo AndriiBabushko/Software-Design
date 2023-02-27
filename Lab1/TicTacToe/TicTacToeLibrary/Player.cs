@@ -2,7 +2,7 @@
 {
     public class Player
     {
-        protected struct Core
+        public struct Core
         {
             public int X;
             public int O;
@@ -14,17 +14,31 @@
                 O = 0;
                 TotalGames = 0;
             }
+
+            public Core(int x, int o, int totalGames)
+            {
+                X = x;
+                O = o;
+                TotalGames = totalGames;
+            }
         }
 
         protected int Number;
         protected string Role;
         protected Core Rating;
 
-        public Player(int playerNumber, string checkRole = "")
+        public Player(int number, string checkRole = "")
         {
-            Number = playerNumber;
-            Role = EnterPlayerRole(playerNumber, checkRole);
+            Number = number;
+            Role = EnterPlayerRole(number, checkRole);
             Rating = new Core();
+        }
+
+        public Player(int number, string role, int x, int o, int totalGames)
+        {
+            Number = number;
+            Role = role;
+            Rating = new Core(x, o, totalGames);
         }
 
         public static string EnterPlayerRole(int PlayerNumber, string CheckRole = "")
@@ -85,16 +99,18 @@
 
             Role = NewRole;
         }
+        public int GetNumber() => Number;
         public string GetRole() => Role;
-        public double GetRating(string RatingKey)
+        public double GetRating(string RatingKey = "")
         {
             switch (RatingKey)
             {
                 case "X": return Rating.X;
                 case "O": return Rating.O;
                 case "TotalGames": return Rating.TotalGames;
-                default: return 0;
             }
+
+            return 0;
         }
     }
 }

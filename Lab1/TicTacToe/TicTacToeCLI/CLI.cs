@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using TicTacToeLibrary;
+﻿using TicTacToeLibrary;
 
 namespace TicTacToeCLI
 {
