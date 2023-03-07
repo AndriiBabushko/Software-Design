@@ -321,7 +321,14 @@
             {
                 for (int j = 0; j < GameField.GetLength(1); j++)
                 {
+                    if(GameField[i, j] == "X")
+                        Console.ForegroundColor = ConsoleColor.Green;
+                    if (GameField[i, j] == "O")
+                        Console.ForegroundColor = ConsoleColor.Red;
+
                     Console.Write($" {GameField[i, j]} ");
+
+                    Console.ForegroundColor = ConsoleColor.White;
 
                     if(j != GameField.GetLength(1) - 1)
                         Console.Write("|");
